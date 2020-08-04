@@ -1,60 +1,48 @@
 <template>
-    <aside class="sidebar" :class="{'sidebar--open' : this.$store.state.sidebarOpen}">
-      <nav>
-        <ul>
-          <li class="section" v-for="{ node } in $static.menu.edges" :key="node.id">
-            <h3 class="section-title">{{node.section}}</h3>
-            <ul>
-              <li v-for="item in node.topics" :key="item.title">
-                <g-link class="topic" :to="'/' + item.slug">{{item.title}}</g-link>
-                <ul v-if="checkAnchors(node.slug, item.slug)" v-for="{ node } in $static.docs.edges" :key="node.id">
-                  <li v-for="heading in node.headings" :key="heading.value">
-                    <a class="sub-topic" :href="'/' + item.slug + heading.anchor">{{heading.value}}</a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <GitLink class="git" />
-      </nav>
-    </aside>
+  <aside class="sidebar" :class="{'sidebar--open' : this.$store.state.sidebarOpen}">
+    <nav>
+      <hr class="dashed">
+      <div align="center">
+        <g-link class="topic" :to="'/about'"><code-icon class="icon"/>blog</g-link>
+        /
+        <g-link class="topic" :to="'/about'"><hash-icon class="icon"/>tags</g-link>
+<!--        /-->
+<!--        <g-link class="topic" :to="'/about'"><info-icon class="icon"/>about</g-link>-->
+      </div>
+      <div align="center">
+        <g-link class="topic" :to="'/about'"><github-icon class="icon"/></g-link>
+        /
+        <g-link class="topic" :to="'/about'"><linkedin-icon class="icon"/></g-link>
+        /
+        <g-link class="topic" :to="'/about'"><instagram-icon class="icon"/></g-link>
+        /
+        <g-link class="topic" :to="'/about'"><mail-icon class="icon"/></g-link>
+      </div>
+      <hr class="dashed">
+      <h3 class="section-title">Table of Contents</h3>
+      <ul>
+        <li v-for="heading in doc.headings" :key="heading.value">
+          <a class="sub-topic" :href="'/' + doc.slug + heading.anchor">{{heading.value}}</a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
 </template>
 
-<static-query>
-query Menu {
-  menu: allMenu(order:ASC) {
-    edges {
-      node {
-        section
-        topics {
-          title
-          slug
-        }
-      }
-    }
-  }
-  docs: allDoc {
-    edges {
-      node {
-        slug
-        headings {
-          value
-          anchor
-        }
-      }
-    }
-  }
-}
-</static-query>
-
 <script>
-import GitLink from '~/components/GitLink.vue'
 import throttle from 'lodash/throttle'
+import { GithubIcon, HashIcon, MailIcon, CodeIcon, LinkedinIcon, InstagramIcon, InfoIcon } from 'vue-feather-icons'
 
 export default {
+  props: ["doc"],
   components: {
-    GitLink
+    GithubIcon,
+    HashIcon,
+    MailIcon,
+    CodeIcon,
+    LinkedinIcon,
+    InstagramIcon,
+    InfoIcon
   },
   watch: {
     '$route' () {
@@ -75,7 +63,7 @@ export default {
       }
     },
     sidebarScroll: function() {
-      let mainNavLinks = document.querySelectorAll('.topic.active + ul .sub-topic')
+      let mainNavLinks = document.querySelectorAll('ul .sub-topic')
       let fromTop = window.scrollY
 
       mainNavLinks.forEach(link => {
@@ -141,6 +129,25 @@ nav {
   min-height: 100%;
   border: 1px solid transparent;
   padding-bottom: 40px;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 1.25rem;
+
+    &.active {
+      color: $brandPrimary;
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+      vertical-align: -3px;
+      margin-right: 4px;
+    }
+  }
 }
 
 ul {
@@ -166,9 +173,10 @@ ul {
 
 .section-title {
   text-transform: uppercase;
-  font-size: 12px;
-  margin-bottom: 20px;
-  opacity: .3;
+  font-size: 13px;
+  margin-bottom: 10px;
+  padding-top: 20px;
+  opacity: .5;
   letter-spacing: .15em;
   font-weight: 700;
 }

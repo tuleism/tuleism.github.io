@@ -1,7 +1,7 @@
 <template>
   <div class="site">
     <Header :menuToggle="sidebar" />
-    <Sidebar v-if="sidebar" />
+    <Sidebar v-if="sidebar" :doc="$page.doc" />
     <main class="main" :class="{'main--no-sidebar': !sidebar, 'main--sidebar-is-open' : this.$store.state.sidebarOpen}">
       <slot/>
     </main>

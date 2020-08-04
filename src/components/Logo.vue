@@ -1,15 +1,6 @@
 <template>
-  <g-link to="/" class="logo" title="Back to home">
-    <transition name="theme">
-      <div v-if="color == 'dark'">
-        <g-image src="~/assets/img/logo-bright.svg" alt="logo" />
-      </div>
-    </transition>
-    <transition name="theme">
-      <div v-if="color == 'bright'">
-        <g-image src="~/assets/img/logo-dark.svg" alt="logo" />
-      </div>
-    </transition>
+  <g-link to="/" title="Back to home" class="blog-name">
+    <span>tule's blog</span>
   </g-link>
 </template>
 
@@ -44,6 +35,13 @@ export default {
     height: 100%;
     width: auto;
   }
+}
+
+.blog-name {
+  font-family: "Fira Code", monospace;
+  font-size: 1.2rem;
+  text-decoration: none;
+  color: inherit;
 }
 
 .theme-enter-active, .theme-leave-active {

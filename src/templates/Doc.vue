@@ -11,10 +11,16 @@
 query Doc ($path: String!) {
   doc: doc (path: $path) {
     title
+    slug
     path
     date (format: "D. MMMM YYYY")
     timeToRead
     content
+    headings(depth: h2) {
+      value
+      anchor
+      depth
+    }
   }
 }
 </page-query>
