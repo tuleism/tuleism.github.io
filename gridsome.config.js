@@ -25,7 +25,7 @@ module.exports = {
     {
       use: '@gridsome/source-filesystem',
       options: {
-        path: 'docs/**/*.md',
+        path: 'docs/blog/**/*.md',
         typeName: 'Doc',
         remark: {
           plugins: [
@@ -47,6 +47,9 @@ module.exports = {
       }
     }
   ],
+  templates: {
+    Doc: '/blog/:year/:slug'
+  },
   chainWebpack: config => {
     const types = ['vue-modules', 'vue', 'normal-modules', 'normal']
     types.forEach(type => addStyleResource(config.module.rule('scss').oneOf(type)))

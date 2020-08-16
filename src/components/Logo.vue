@@ -1,6 +1,6 @@
 <template>
   <g-link to="/" title="Back to home" class="blog-name">
-    <span>tule's blog</span>
+    <span>tuleisM >>= random.nextBlog</span>
   </g-link>
 </template>
 
@@ -39,7 +39,7 @@ export default {
 
 .blog-name {
   font-family: "Fira Code", monospace;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   text-decoration: none;
   color: inherit;
 }

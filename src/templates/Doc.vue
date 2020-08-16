@@ -40,16 +40,13 @@ export default {
 
 
 <style lang="scss" scoped>
-/deep/ > p {
-  opacity: .8;
-}
 
 /deep/ > h2 {
-  padding-top: 100px;
+  padding-top: 80px;
   margin-top: -80px;
 
   @include respond-above(md) {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 }
 
