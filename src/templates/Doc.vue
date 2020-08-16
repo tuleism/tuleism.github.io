@@ -3,7 +3,7 @@
     <h1>
       {{ $page.doc.title }}
     </h1>
-     <div class="markdown" v-html="$page.doc.content" />
+    <div class="markdown" v-html="$page.doc.content" />
   </Layout>
 </template>
 
@@ -16,6 +16,10 @@ query Doc ($path: String!) {
     date (format: "D. MMMM YYYY")
     timeToRead
     content
+    description
+    tags {
+      title
+    }
     headings(depth: h2) {
       value
       anchor

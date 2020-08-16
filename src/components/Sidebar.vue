@@ -3,26 +3,24 @@
     <nav>
       <hr class="dashed">
       <div align="center">
-        <g-link class="topic" :to="'/about'"><code-icon class="icon"/>blog</g-link>
+        <g-link class="topic" to="/" exact><code-icon class="icon"/>blog</g-link>
         /
-        <g-link class="topic" :to="'/about'"><hash-icon class="icon"/>tags</g-link>
-<!--        /-->
-<!--        <g-link class="topic" :to="'/about'"><info-icon class="icon"/>about</g-link>-->
+        <g-link class="topic" to="/about/"><info-icon class="icon"/>about</g-link>
       </div>
       <div align="center">
-        <g-link class="topic" :to="'https://github.com/tuleism'"><github-icon class="icon"/></g-link>
+        <g-link class="topic" to="https://github.com/tuleism"><github-icon class="icon"/></g-link>
         /
-        <g-link class="topic" :to="'https://www.linkedin.com/in/tuleism'"><linkedin-icon class="icon"/></g-link>
+        <g-link class="topic" to="https://www.linkedin.com/in/tuleism"><linkedin-icon class="icon"/></g-link>
         /
-        <g-link class="topic" :to="'https://www.instagram.com/randomphotohereandthere'"><instagram-icon class="icon"/></g-link>
+        <g-link class="topic" to="https://www.instagram.com/randomphotohereandthere"><instagram-icon class="icon"/></g-link>
         /
-        <g-link class="topic" :to="'mailto:tuleism@gmail.com'"><mail-icon class="icon"/></g-link>
+        <g-link class="topic" to="mailto:tuleism@gmail.com"><mail-icon class="icon"/></g-link>
       </div>
       <hr class="dashed">
-      <h3 class="section-title">Table of Contents</h3>
-      <ul>
-        <li v-for="heading in doc.headings" :key="heading.value">
-          <a class="sub-topic" :href="doc.path + heading.anchor">{{heading.value}}</a>
+      <h3 class="section-title" v-if="$page && $page.doc">Table of Contents</h3>
+      <ul v-if="$page && $page.doc">
+        <li v-for="heading in $page.doc.headings" :key="heading.value">
+          <a class="sub-topic" :href="$page.doc.path + heading.anchor">{{heading.value}}</a>
         </li>
       </ul>
     </nav>
@@ -34,7 +32,6 @@ import throttle from 'lodash/throttle'
 import { GithubIcon, HashIcon, MailIcon, CodeIcon, LinkedinIcon, InstagramIcon, InfoIcon } from 'vue-feather-icons'
 
 export default {
-  props: ["doc"],
   components: {
     GithubIcon,
     HashIcon,

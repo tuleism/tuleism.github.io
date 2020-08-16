@@ -8,17 +8,6 @@
 module.exports = function (api) {
   api.loadSource(store => {
     // Use the Data Store API here: https://gridsome.org/docs/data-store-api
-
-    const data = require('./data/settings.json');
-
-    const Menu = store.addCollection({typeName: 'Menu'})
-
-    for(const item of data.sidebar){
-    	Menu.addNode({
-        section: item.section,
-        topics: item.topics
-	    })
-    }
   })
 
   api.createPages(({ createPage }) => {

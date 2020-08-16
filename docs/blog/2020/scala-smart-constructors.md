@@ -2,6 +2,7 @@
 title: Smart Constructors in Scala
 date: 2020-08-15
 slug: scala-smart-constructors
+description: This blog post discusses the use of Smart Constructors and how to do it in Scala
 tags:
     - scala
     - programming
@@ -17,10 +18,10 @@ Take for example an `Email` type, which contains an email address:
 case class Email(address: String)
 ```
 
-The problem with `Email` is that `address` can contain **any** value of type `String`, even if they are not valid email address.
+The problem with `Email` is that `address` can contain **any** value of type `String`, even if they are not valid email addresses.
 Due to that, code that uses `Email` cannot assume that it's always a valid email address. Thus, we want to:
 
-1. Constrain the set of possible value for `address` to be the set of valid email address.
+1. Constrain the set of possible value for `address` to be the set of valid email addresses.
 2. Make sure every instance of `Email` satisfies this constraint. In other words, every `Email` instance contains a valid email address.
 
 Smart Constructors is one solution for this: instead of normal constructors, we **force** construction through
@@ -79,7 +80,7 @@ object Email {
 * With `final`, we disallow attempts to `extends Email`.
 * With `private`, construction through `new Email(value)` can only takes place within the current source file.
 
-However, it is still possible to create invalid `Email` instances:
+However, it is still possible to create an invalid `Email` instance:
 
 * By using `copy(value = "badValue")` to create a shallow copy of an instance of `Email` with a bad value.
 * By using `Email(value = "badValue")`, which translates to calling `apply()` on the `Email`'s companion object to construct an `Email` with a bad value.

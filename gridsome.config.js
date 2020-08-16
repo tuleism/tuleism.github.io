@@ -16,8 +16,9 @@ function addStyleResource (rule) {
 }
 
 module.exports = {
-  siteName: 'Jamdocs',
-  siteUrl: 'https://jamdocs.netlify.com',
+  siteName: 'Random.nextBlog by tuleism',
+  siteUrl: 'https://tuleism.github.io',
+  titleTemplate: `%s | Random.nextBlog`,
   templates: {
     Doc: '/:slug',
   },
@@ -31,6 +32,13 @@ module.exports = {
           plugins: [
             '@gridsome/remark-prismjs'
           ]
+        },
+        refs: {
+          // Create a Tag content type and its nodes automatically.
+          tags: {
+            typeName: 'Tag',
+            create: true
+          }
         }
       }
     },
