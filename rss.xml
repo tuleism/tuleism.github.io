@@ -1,1 +1,199 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Random.nextBlog by tuleism]]></title><description><![CDATA[Random.nextBlog by tuleism]]></description><link>https://tuleism.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sun, 16 Aug 2020 09:53:52 GMT</lastBuildDate><atom:link href="https://tuleism.github.io/rss.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[Smart Constructors in Scala]]></title><description><![CDATA[This blog post discusses the use of Smart Constructors and how to do it in Scala]]></description><link>https://tuleism.github.io/blog/2020/scala-smart-constructors/</link><guid isPermaLink="true">https://tuleism.github.io/blog/2020/scala-smart-constructors/</guid><category><![CDATA[scala]]></category><category><![CDATA[programming]]></category><category><![CDATA[tricks]]></category><pubDate>Sat, 15 Aug 2020 00:00:00 GMT</pubDate></item></channel></rss>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Random.nextBlog by tuleism]]></title><description><![CDATA[Random.nextBlog by tuleism]]></description><link>https://tuleism.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sun, 16 Aug 2020 10:01:19 GMT</lastBuildDate><atom:link href="https://tuleism.github.io/rss.xml" rel="self" type="application/rss+xml"/><item><title><![CDATA[Smart Constructors in Scala]]></title><description><![CDATA[
+## Introduction
+
+Sometimes, we need guarantees about the values in our program beyond what can be accomplished with the usual type system checks.
+Take for example an `Email` type, which contains an email address:
+
+```scala
+case class Email(address: String)
+```
+
+The problem with `Email` is that `address` can contain **any** value of type `String`, even if they are not valid email addresses.
+Due to that, code that uses `Email` cannot assume that it's always a valid email address. Thus, we want to:
+
+1. Constrain the set of possible value for `address` to be the set of valid email addresses.
+2. Make sure every instance of `Email` satisfies this constraint. In other words, every `Email` instance contains a valid email address.
+
+Smart Constructors is one solution for this: instead of normal constructors, we **force** construction through
+"smart" functions that only return `Email` instances when the input passes validation.
+
+In our case, we can use a function that returns `Option[Email`, `Either[Error, Email]`, etc depends on the validation
+result. For demonstration, I use a very simple regex:
+
+```scala
+def fromString(v: String): Option[Email] =
+  NaiveEmailRegex.findFirstIn(v).filter(_ == v).map(_ => new Email(v))
+```
+
+Currently, I'm aware of 3 ways to implement Smart Constructors in Scala.
+
+## The Straightforward One: `sealed trait`
+
+Using `trait`, it is very straightforward to implement:
+
+```scala
+sealed trait Email {
+  def value: String
+}
+
+object Email {
+  def fromString(v: String): Option[Email] =
+    NaiveEmailRegex.findFirstIn(v).filter(_ == v).map { _ =>
+      new Email {
+        override def value: String = v
+      }
+    }
+}
+```
+
+- With `sealed`, we disallow attempts to `extends Email` from outside of this source file.
+- `Email.fromString` is the only way to construct an `Email` from outside of this source file.
+
+## The Confusing One: `final case class private`
+When it comes to modeling data, especially those that are immutable, case classes is the method of choice for Scala.
+Compared to traits, case classes come with many [useful features](https://docs.scala-lang.org/overviews/scala-book/case-classes.html)
+out of the box: pattern matching, equality comparison, copying, etc.
+
+On the other hand, some of these make it harder to implement smart constructors. The implementations also differ
+depends on which Scala version (and compiler flags) you are using, causing confusion for beginners.
+
+Let's begin with an initial implementation in **Scala 2.11**:
+
+```scala
+final case class Email private (value: String)
+
+object Email {
+  def fromString(v: String): Option[Email] = ...
+}
+```
+
+* With `final`, we disallow attempts to `extends Email`.
+* With `private`, construction through `new Email(value)` can only takes place within the current source file.
+
+However, it is still possible to create an invalid `Email` instance:
+
+* By using `copy(value = "badValue")` to create a shallow copy of an instance of `Email` with a bad value.
+* By using `Email(value = "badValue")`, which translates to calling `apply()` on the `Email`'s companion object to construct an `Email` with a bad value.
+
+To fix these problems, we need to **either hide or override** the `copy()` and `apply()` functions. For example, with `apply()`, there are 2 choices:
+
+* Override it with `private` modifier to hide the `apply()` function, disallowing construction through `Email(value)`.
+* Override it with an alternative return type and implementation: `Email(value)` is possible, but let's say, return `Option[Email]` instead.
+
+### 2.11.x and 2.12.x
+
+It turns out it is not possible to override `apply()` in **vanilla** Scala 2.11.x. See this [StackOverflow question](https://stackoverflow.com/questions/19462598/scala-case-class-implementation-of-smart-constructors) for more details.
+
+To do that, we need to add the compiler flag `-Xsource:2.12`, which is only available [after 2.11.11](https://github.com/scala/scala/releases/tag/v2.11.11):
+
+> Allow custom apply and unapply methods in case class companions. Also allows case class constructors and apply methods to be private. (In 2.11.11, -Xsource:2.12 is needed to enable these changes. In Scala 2.12.2, they are on by default.)
+
+With this, our code becomes:
+
+```scala
+final case class Email private (value: String) {
+  private def copy(): Unit = ()
+}
+
+object Email {
+  private def apply(value: String): Email = ???
+
+  def fromString(v: String): Option[Email] = ...
+}
+```
+
+This is the same for 2.12.x without any compiler flag.
+
+### 2.13.x and Dotty
+
+With **vanilla** 2.13.x, the code is the same as 2.12.x. However, [from 2.13.2](https://github.com/scala/scala/releases/tag/v2.13.2), we can reduce the boilerplate by enabling `-Xsource:3`. From [scala/scala#7702](https://github.com/scala/scala/pull/7702):
+
+>Backport from dotty:
+>* If a case class constructor is private or private[foo]: the synthesized copy and apply methods will have the same access modifier.
+>* If a case class constructor is protected or protected[foo]: the synthesized copy method will have the same access modifier. The synthesized apply method will remain public, because protected doesn't make sense in an object.
+>Obviously, if a user defines a custom copy or apply method, that one—including its access modifier—will take precedence.
+
+We end up with the original code that we begin with:
+
+```scala
+final case class Email private (value: String)
+
+object Email {
+  def fromString(v: String): Option[Email] = ...
+}
+```
+
+Phew! It only takes a few Scala major releases to get what we want.
+
+## The Tricky One: `sealed abstract case class private`
+
+We don't normally see `abstract` being used on a case class. However, for smart constructors, it works wonderfully:
+
+```scala
+sealed abstract case class Email private (value: String)
+
+object Email {
+  def fromString(v: String): Option[Email] =
+    NaiveEmailRegex.findFirstIn(v).filter(_ == v)
+      .map(_ => new Email(v) {})
+}
+```
+
+- With `sealed`, we disallow attempts to `extends Email` from outside this source file.
+- With `abstract`, we disallow construction through `new Email()`.
+- With `abstract`, `copy()` and `apply()` are not automatically generated. We don't have to worry about them.
+- It just work™! See [the original gist](https://gist.github.com/tpolecat/a5cb0dc9adeacc93f846835ed21c92d2) for more details.
+
+## Testing
+
+We verify that our smart constructors implementation works by using a test suite to check that allowed code **Compiles** and the rest **DoesNotCompile**.
+
+Below is the test suite for `sealed abstract case class private`. The rest can be found in the [code repository](https://github.com/tuleism/scala-smart-constructors).
+
+```scala
+"AbstractCaseClassExample" in {
+  import AbstractCaseClassExample.Email
+  val email = Email.fromString(exampleEmail).value // apply now return Option
+  email.value mustBe exampleEmail // access ok
+
+  // case class's unapply()
+  assertCompiles(
+    """
+      |email match { case Email(value) => value }
+      |""".stripMargin
+  )
+  // companion's apply()
+  assertDoesNotCompile(
+    """
+      |Email(exampleEmail)
+      |""".stripMargin
+  )
+  // public constructor
+  assertDoesNotCompile(
+    """
+      |new Email(exampleEmail)
+      |""".stripMargin
+  )
+  // extends trait
+  assertDoesNotCompile(
+    """
+      |new Email {
+      |  override def value: String = exampleEmail
+      |}
+      |""".stripMargin
+  )
+  // case class's copy()
+  assertDoesNotCompile(
+    """
+      |email.copy(value = exampleEmail)
+      |""".stripMargin
+  )
+}
+```
+
+## Summary
+
+All of these allow us to implement smart constructors. My favorite one is `sealed abstract case class private` because:
+- It allows us to use `case class` (instead of `trait`, which is more verbose) and most of its [goodness](https://docs.scala-lang.org/overviews/scala-book/case-classes.html).
+- It looks the same in all Scala version. Cross-building is a breeze.
+]]></description><link>https://tuleism.github.io/blog/2020/scala-smart-constructors/</link><guid isPermaLink="true">https://tuleism.github.io/blog/2020/scala-smart-constructors/</guid><category><![CDATA[scala]]></category><category><![CDATA[programming]]></category><category><![CDATA[tricks]]></category><pubDate>Sat, 15 Aug 2020 00:00:00 GMT</pubDate></item></channel></rss>
