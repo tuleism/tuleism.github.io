@@ -53,6 +53,29 @@ module.exports = {
       options: {
         cacheTime: 600000
       }
+    },
+    {
+      use: 'gridsome-plugin-rss',
+      options: {
+        contentTypeName: 'Doc',
+        feedOptions: {
+          title: 'Random.nextBlog by tuleism',
+          feed_url: 'https://tuleism.github.io/rss.xml',
+          site_url: 'https://tuleism.github.io'
+        },
+        feedItemOptions: node => ({
+          title: node.title,
+          description: node.description,
+          url: 'https://tuleism.github.io' + node.path,
+          date: node.date,
+          categories: node.tags
+        }),
+        latest: true,
+        output: {
+          dir: './static',
+          name: 'rss.xml'
+        }
+      }
     }
   ],
   templates: {
