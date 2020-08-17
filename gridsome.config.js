@@ -76,7 +76,8 @@ module.exports = {
           name: 'rss.xml'
         }
       }
-    }
+    },
+    'gridsome-plugin-robots-txt'
   ],
   templates: {
     Doc: '/blog/:year/:slug'
