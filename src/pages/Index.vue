@@ -1,6 +1,7 @@
 <template>
   <Layout :sidebar="true">
     <div class="content">
+      <h1>Recent articles</h1>
       <PostList v-for="year in years" :key="year" :year="year" />
     </div>
   </Layout>
@@ -22,6 +23,7 @@ query {
         }
         timeToRead
         date(format:"MMM D YYYY")
+        description
       }
     }
   }
@@ -52,7 +54,7 @@ export default {
     title: "Random.nextBlog by tuleism",
     titleTemplate: `%s`,
     meta: [
-      { key: 'description', name: 'description', content: 'Tech blog on Scala, Programming, Data and Distributed Systems'}
+      { key: 'description', name: 'description', content: 'Random.nextBlog by tuleism, a tech blog on Scala, Programming, Data and Distributed Systems'}
     ]
   }
 }

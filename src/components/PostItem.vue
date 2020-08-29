@@ -3,6 +3,7 @@
     <span class="date">{{date}}</span>
     <g-link :to="post.path" class="read">{{post.title}}</g-link>
     <span class="time-to-read"><i>{{post.timeToRead}} min read</i></span>
+    <p>{{post.description}}</p>
   </div>
 </template>
 
@@ -17,7 +18,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .date {
   margin-right:10px;
   min-width: 60px;
@@ -27,5 +28,19 @@ export default {
   margin-left:10px;
   color:gray;
   font-size:.8em;
+}
+.post-item {
+  padding-left:20px;
+}
+.read {
+  font-size: 1.5rem;
+}
+.post-item p {
+  line-height: 1.5;
+  font-style: italic;
+  color:gray;
+  border-left: 3px solid $brandPrimary;
+  padding-left: 10px;
+  margin: 0.5rem;
 }
 </style>

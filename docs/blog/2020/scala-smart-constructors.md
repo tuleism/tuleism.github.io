@@ -2,7 +2,7 @@
 title: Smart Constructors in Scala
 date: 2020-08-15
 slug: scala-smart-constructors
-description: This blog post discusses the use of Smart Constructors and how to do it in Scala
+description: Sometimes, we need guarantees about the values in our program beyond what can be accomplished with the usual type system checks. Smart Constructors is one solution for this.
 tags:
     - scala
     - programming
