@@ -54,7 +54,7 @@ export default {
   },
   metaInfo() {
     return {
-      title: "Random.nextBlog | Scala, Programming, Data, Distributed Systems",
+      title: "Random.nextBlog | Scala, Programming, Data, Search, Distributed Systems",
       titleTemplate: `%s`,
       meta: [
         {property: "og:type", content: 'website'},
