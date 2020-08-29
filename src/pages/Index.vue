@@ -51,10 +51,10 @@ export default {
     PostList
   },
   metaInfo: {
-    title: "Random.nextBlog by tuleism",
+    title: "Random.nextBlog | Scala, Programming, Data, Distributed Systems",
     titleTemplate: `%s`,
     meta: [
-      { key: 'description', name: 'description', content: 'Random.nextBlog by tuleism, a tech blog on Scala, Programming, Data and Distributed Systems'}
+      { key: 'description', name: 'description', content: 'Linh Nguyen (tuleism)\'s tech blog on Scala, Programming, Data and Distributed Systems'}
     ]
   }
 }

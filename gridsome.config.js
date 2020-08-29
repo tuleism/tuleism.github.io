@@ -59,7 +59,7 @@ module.exports = {
       options: {
         contentTypeName: 'Doc',
         feedOptions: {
-          title: 'Random.nextBlog by tuleism',
+          title: 'Random.nextBlog',
           feed_url: 'https://tuleism.github.io/rss.xml',
           site_url: 'https://tuleism.github.io'
         },

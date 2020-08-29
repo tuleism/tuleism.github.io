@@ -3,18 +3,18 @@
     <nav>
       <hr class="dashed">
       <div align="center">
-        <g-link class="topic" to="/" exact><code-icon class="icon"/>blog</g-link>
+        <g-link class="topic" to="/" exact title="Blog"><code-icon class="icon"/>blog</g-link>
         /
-        <g-link class="topic" to="/about/"><info-icon class="icon"/>about</g-link>
+        <g-link class="topic" to="/about/" title="About Me"><info-icon class="icon"/>about</g-link>
       </div>
       <div align="center">
-        <g-link class="topic" to="https://github.com/tuleism"><github-icon class="icon"/></g-link>
+        <g-link class="topic" to="https://github.com/tuleism" title="GitHub @tuleism"><github-icon class="icon"/></g-link>
         /
-        <g-link class="topic" to="https://www.linkedin.com/in/tuleism"><linkedin-icon class="icon"/></g-link>
+        <g-link class="topic" to="https://www.linkedin.com/in/tuleism" title="LinkedIn @tuleism"><linkedin-icon class="icon"/></g-link>
         /
-        <g-link class="topic" to="https://www.instagram.com/randomphotohereandthere"><instagram-icon class="icon"/></g-link>
+        <g-link class="topic" to="https://www.instagram.com/randomphotohereandthere" title="Instagram @randomphotohereandthere"><instagram-icon class="icon"/></g-link>
         /
-        <g-link class="topic" to="mailto:tuleism@gmail.com"><mail-icon class="icon"/></g-link>
+        <g-link class="topic" to="mailto:tuleism@gmail.com" title="Contact Me"><mail-icon class="icon"/></g-link>
       </div>
       <hr class="dashed">
       <h3 class="section-title" v-if="$page && $page.doc">Table of Contents</h3>
