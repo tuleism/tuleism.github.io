@@ -1,7 +1,7 @@
 <template>
   <Layout :sidebar="true">
     <div class="content">
-      <h1>Recent articles</h1>
+      <h1>Recent Articles</h1>
       <PostList v-for="year in years" :key="year" :year="year" />
     </div>
   </Layout>
@@ -11,6 +11,8 @@
 query {
   metadata {
     siteName
+    siteUrl
+    siteDescription
   }
   allPost: allDoc {
     edges {
@@ -50,12 +52,20 @@ export default {
   components: {
     PostList
   },
-  metaInfo: {
-    title: "Random.nextBlog | Scala, Programming, Data, Distributed Systems",
-    titleTemplate: `%s`,
-    meta: [
-      { key: 'description', name: 'description', content: 'Linh Nguyen (tuleism)\'s tech blog on Scala, Programming, Data and Distributed Systems'}
-    ]
+  metaInfo() {
+    return {
+      title: "Random.nextBlog | Scala, Programming, Data, Distributed Systems",
+      titleTemplate: `%s`,
+      meta: [
+        {property: "og:type", content: 'website'},
+        {property: "og:description", content: this.$page.metadata.siteDescription},
+        {property: "og:site_name", content: this.$page.metadata.siteName},
+        {property: 'og:url', content: this.$page.metadata.siteUrl},
+        {name: "twitter:title", content: this.$page.metadata.siteName},
+        {name: "twitter:description", content: this.$page.metadata.siteDescription},
+        {name: 'twitter:url', content: this.$page.metadata.siteUrl}
+      ]
+    }
   }
 }
 </script>

@@ -36,6 +36,20 @@ export default function (Vue, { router, head, isClient, appOptions }) {
     content: 'default'
   })
 
+  let copyRightNotice = `Linh Nguyen, ${ new Date().getFullYear() }. All rights reserved`;
+
+  head.meta.push(
+    {
+      name: 'author',
+      content: 'Linh Nguyen'
+    },
+    {name: 'copyright', content: copyRightNotice},
+    {property: "og:image", content: 'https://tuleism.github.io/logo-512.png'},
+    {name: "twitter:card", content: 'summary'},
+    {name: "twitter:site", content: '@tuleism'},
+    {name: "twitter:image", content: 'https://tuleism.github.io/logo-512.png'}
+  )
+
   // State
   appOptions.store = new Vuex.Store({
     state: {

@@ -9,6 +9,11 @@
 
 <page-query>
 query Doc ($path: String!) {
+  metadata {
+    siteName
+    siteUrl
+    siteDescription
+  }
   doc: doc (path: $path) {
     title
     slug
@@ -35,8 +40,21 @@ export default {
     return {
       title: this.$page.doc.title,
       meta: [
-        { key: 'description', name: 'description', content: this.$page.doc.description }
-      ]
+        {key: 'description', name: 'description', content: this.$page.doc.description},
+        {property: "og:type", content: 'article'},
+        {property: "og:description", content: this.$page.doc.description},
+        {property: "og:site_name", content: this.$page.metadata.siteName},
+        {property: "og:title", content: this.$page.doc.title},
+        {property: 'og:url', content: this.$page.metadata.siteUrl + this.$page.doc.path},
+        {name: 'article:author', content: 'Linh Nguyen'},
+        {name: "twitter:title", content: this.$page.doc.title},
+        {name: "twitter:description", content: this.$page.doc.description},
+        {name: 'twitter:url', content: this.$page.metadata.siteUrl + this.$page.doc.path}
+      ].concat(
+        this.$page.doc.tags.map(tag => {
+          return {name: 'article:tag', content: tag.title}
+        })
+      )
     }
   }
 }

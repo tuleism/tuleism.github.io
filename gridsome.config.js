@@ -16,8 +16,9 @@ function addStyleResource (rule) {
 }
 
 module.exports = {
-  siteName: 'Random.nextBlog by tuleism',
+  siteName: 'Random.nextBlog',
   siteUrl: 'https://tuleism.github.io',
+  siteDescription: 'Linh Nguyen (tuleism)\'s Tech Blog on Scala, Programming, Data and Distributed Systems',
   titleTemplate: `%s | Random.nextBlog`,
   templates: {
     Doc: '/:slug',
