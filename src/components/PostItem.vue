@@ -3,6 +3,7 @@
     <span class="date">{{date}}</span>
     <g-link :to="post.path" class="read">{{post.title}}</g-link>
     <span class="time-to-read"><i>{{post.timeToRead}} min read</i></span>
+    <span class="tag" v-for="tag in post.tags" :key="tag.title">#{{tag.title}}</span>
     <p>{{post.description}}</p>
   </div>
 </template>
@@ -26,6 +27,7 @@ export default {
 }
 .time-to-read {
   margin-left:10px;
+  margin-right:10px;
   color:gray;
   font-size:.8em;
 }
@@ -42,5 +44,8 @@ export default {
   border-left: 3px solid $brandPrimary;
   padding-left: 10px;
   margin: 0.5rem;
+}
+.tag {
+  padding: 0px 5px 0px 5px;
 }
 </style>
